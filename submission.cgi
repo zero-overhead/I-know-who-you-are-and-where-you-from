@@ -88,7 +88,7 @@ elsif ($cgi->request_method eq 'POST' && $name ne "" &&  $klasse ne "" &&  $aufg
     print $cgi->header('text/html; charset=UTF-8');
     print <<'HTML';
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <title>NOT Submitted</title>
@@ -109,7 +109,7 @@ else {
     print $cgi->header('text/html; charset=UTF-8');
     print <<'HTML';
 <!DOCTYPE html>
-<html>
+<html lang="de">
   <head>
     <meta charset="UTF-8">
     <title>Submission Form</title>
@@ -150,20 +150,28 @@ else {
 <form method="post" action="submission.cgi">
     <label>
         Name
-        <input type="text" name="Name" value="
+        <input type="text" name="Name" 
 HTML
-print($cookie_name);
+
+if($cookie_name ne '') {
+  print('value="' . $cookie_name . '"')
+}
+
     print <<'HTML';
-" required>
+  required>
     </label>
 
     <label>
         Klasse
-        <input type="text" name="Klasse" value="
+        <input type="text" name="Klasse" 
 HTML
-print($cookie_klasse);
+
+if($cookie_klasse ne '') {
+  print('value="' . $cookie_klasse . '"')
+}
+
     print <<'HTML';
-" required>
+ required>
     </label>
 
     <label>
