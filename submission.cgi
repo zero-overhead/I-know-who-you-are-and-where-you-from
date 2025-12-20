@@ -1,4 +1,4 @@
-#!/usr/bin/perl -w
+#!/usr/bin/perl -wT
 use strict;
 use warnings;
 use CGI qw(:standard);
@@ -24,48 +24,53 @@ my $aufgabe = $cgi->param('Aufgabe') // '';
 my $link    = $cgi->param('Link')    // '';
 my $uuid    = $cgi->param('UUID')    // $cookie_uuid;
 
-#keep only name proportion of email - first occurence of @
+#keep only name proportion of email - match all until first occurence of @
 if ($name =~ m/@/) {
   $name =~ m/(.+?)@.*/;
   $name = $1;
 }
 
-# Sanitize name: keep letters, numbers
-$name    =~ s/[^a-zA-Z0-9\.\-\_]//g;
+# Sanitize name: keep letters, numbers, some signs
+$name  =~ s/[^a-zA-Z0-9\-\.\_]//g;
 $klasse  =~ s/[^a-zA-Z0-9]//g;
-$aufgabe =~ s/[^a-zA-Z0-9]//g;
+$aufgabe  =~ s/[^a-zA-Z0-9\-\.\_]//g;
+
 # Sanitize name: keep all needed in URL https://webtigerpython.ethz.ch/#?code=
 # and Base64URL encoding plus letters, numbers, dot, - _ # ? : /
 $link    =~ s/[^a-zA-Z0-9\.\-\#_\?\:\=\/]//g;
-$uuid    =~ s/[^a-zA-Z0-9\-]//g;
 
-# if no valid UUID was found, create one
-if ($uuid eq '') {
-  $uuid = do { open my $fh, "/proc/sys/kernel/random/uuid" or die $!; scalar <$fh> };
-}
-
-# If the form was submitted via POST and we got all information we need
+# If the form was submitted via POST and we got all information we need - process request
 if ($cgi->request_method eq 'POST' 
-	&& $name ne "" 
-	&& $klasse ne "" 
-	&& $klasse =~ /^\w\d\w$/ 
-	&& $aufgabe ne "" 
-	&& $link ne "" 
-	&& $link =~ m#^https://webtigerpython.ethz.ch/.+code.+#
+	&& $name ne "" && $name =~ /\w+/ 
+	&& $klasse ne "" && $aufgabe =~ /\w|\d/ 
+	&& $aufgabe ne "" && $klasse =~ /^\w\d\w$/ 
+	&& $link ne "" && $link =~ m#^https://webtigerpython.ethz.ch/.+code.+#
 ) {
-
     # statistics
 	my $utc_timestamp = time;
 	my $IP = $ENV{"REMOTE_ADDR"};
 	my $UA = $ENV{"HTTP_USER_AGENT"};
+	
+	# if no valid UUID was found, create one
+	if ($uuid eq '' || $uuid =~ /([^a-zA-Z0-9\-])/) {
+	  $uuid = do { open my $fh, "/proc/sys/kernel/random/uuid" or die $!; scalar <$fh> };
+	}
+	# needed untainting in order to use T switch in shebang
+	$uuid =~ /([a-zA-Z0-9\-]+)/;
+	$uuid = $1;
 
     # Write to file
-	my $fname = $uuid . '_' . $utc_timestamp . '_' . $klasse . '_' . $name . '_' . $aufgabe . '.txt';
+	my $fname = $uuid . '_' . $utc_timestamp . '.txt';
 	my $outfile = $basedir . $fname;
 
-	my $output = "'$IP','$UA','$name','$klasse','$aufgabe','$link'\n";
+	# content
+	my $output = "'$IP','$UA','$klasse','$aufgabe','$name','$link'\n";
 
-    open my $fh, '>', $outfile or die "Cannot open $outfile: $!";
+	# never overwrite files
+	die "file $outfile exists - please try again" if -e $outfile;
+	
+	# create output file - just in case we have a collision we use >>
+    open my $fh, '>>', $outfile or die "Cannot open $outfile: $!";
     print $fh $output;
     close $fh or die "Cannot close $outfile: $!";
 
@@ -104,10 +109,12 @@ print <<'HTML';
 </head>
 <body>
     <h1 style="background-color:MediumSeaGreen;">Submission successful</h1>
-    <p>Your data has been saved.<p>
+    <p>Your WebTigerPython Link has been saved.<p>
 HTML
 
-print('<p><small>' . $uuid . '</small></p><p><small>' . $link .'</small></p>');
+print('<p><small>' . localtime($utc_timestamp) . '</small></p><p><small>' 
+                   . $uuid . '</small></p><p><small>' 
+				   . $link .'</small></p>');
 
 print <<'HTML';
     <p><a href="submission.cgi">Submit another code link</a></p>
@@ -127,7 +134,7 @@ elsif ($cgi->request_method eq 'POST') {
 </head>
 <body>
     <h1 style="background-color:Tomato;">Submission FAILED</h1>
-    <p>Your data has NOT been saved.</p>
+    <p>Your WebTigerPython Link has NOT been saved.</p>
     <p>Did you use a WRONG format for <b>Name</b> or <b>Klasse</b> or <b>Link</b>?</p>
 HTML
 print("<p>Email: $name</p>");
@@ -189,13 +196,13 @@ else {
 <h1>Submit a WebTigerPython Code Link</h1>
 
 <form method="post" action="submission.cgi">
-    <label title="YOUR.NAME@domain"> 
+    <label title="YOUR.NAME@domain.tld"> 
 HTML
 
 if ($cookie_name ne '') {
   print($cookie_name)
 } else {
-  print('Email <input type="text" name="Name" required>')
+  print('Schul-Email-Adresse <input type="text" name="Name" required>')
 }
 
 print <<'HTML';
