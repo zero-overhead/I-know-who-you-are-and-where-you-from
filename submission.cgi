@@ -6,8 +6,7 @@ use CGI::Cookie;
 use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
 
 #where to store the output files
-my $basedir = '/home/httpd/vhosts/melzian.ch/submissions/';
-my $email_domain = '@student.kszofingen.ch';
+my $basedir = '../../submissions/';
 
 # Create CGI object
 my $cgi = CGI->new;
@@ -190,11 +189,11 @@ else {
 <h1>Submit a WebTigerPython Code Link</h1>
 
 <form method="post" action="submission.cgi">
-    <label title="YOUR.NAME@student.kszofingen.ch"> 
+    <label title="YOUR.NAME@domain"> 
 HTML
 
 if ($cookie_name ne '') {
-  print($cookie_name . $email_domain)
+  print($cookie_name)
 } else {
   print('Email <input type="text" name="Name" required>')
 }
