@@ -51,7 +51,6 @@ if ($cgi->request_method eq 'POST'
 	my $IP = $ENV{"REMOTE_ADDR"};
 	my $UA = $ENV{"HTTP_USER_AGENT"};
 	
-	# if no valid UUID was found, create one
 	if ($uuid eq '' || $uuid =~ /([^a-zA-Z0-9\-])/) {
 	  $uuid = do { open my $fh, "/proc/sys/kernel/random/uuid" or die $!; scalar <$fh> };
 	}
@@ -135,9 +134,9 @@ elsif ($cgi->request_method eq 'POST') {
 <body>
     <h1 style="background-color:Tomato;">Submission FAILED</h1>
     <p>Your WebTigerPython Link has NOT been saved.</p>
-    <p>Did you use a WRONG format for <b>Name</b> or <b>Klasse</b> or <b>Link</b>?</p>
+    <p>Did you use a WRONG format for <b>Name</b> or <b>Klasse</b> or <b>Aufgabe</b> or <b>Link</b>?</p>
 HTML
-print("<p>Email: $name</p>");
+print("<p>Name: $name</p>");
 print("<p>Klasse: $klasse</p>");
 print("<p>Aufgabe: $aufgabe</p>");
 print("<p>Link: $link</p>");
@@ -202,7 +201,7 @@ HTML
 if ($cookie_name ne '') {
   print($cookie_name)
 } else {
-  print('Schul-Email-Adresse <input type="text" name="Name" required>')
+  print('Name <input type="text" name="Name" required>')
 }
 
 print <<'HTML';
