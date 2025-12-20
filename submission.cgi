@@ -103,7 +103,7 @@ print <<'HTML';
 	<meta http-equiv="refresh" content="2; url=submission.cgi">
 </head>
 <body>
-    <h1>Submission successful</h1>
+    <h1 style="background-color:MediumSeaGreen;">Submission successful</h1>
     <p>Your data has been saved.<p>
 HTML
 
@@ -126,7 +126,7 @@ elsif ($cgi->request_method eq 'POST') {
 	<meta http-equiv="refresh" content="5; url=submission.cgi">
 </head>
 <body>
-    <h1>Submission FAILED</h1>
+    <h1 style="background-color:Tomato;">Submission FAILED</h1>
     <p>Your data has NOT been saved.</p>
     <p>Did you use a WRONG format for <b>Name</b> or <b>Klasse</b> or <b>Link</b>?</p>
 HTML
