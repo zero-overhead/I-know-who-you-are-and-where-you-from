@@ -12,11 +12,16 @@ my $cgi = CGI->new;
 print $cgi->header('text/html; charset=UTF-8');
 
 # Get Data
+my $name = $cgi->param('Name') // '';
 my $identifier = $cgi->param('Identifier') // '';
+my $aufgabe = $cgi->param('Aufgabe') // '';
 my $link = $cgi->param('Link') // '';
 
 # Sanitize name: keep letters
+$name  =~ s/[^a-zA-Z0-9\s\-]//g;
+$name  =~ s/\s/_/g;
 $identifier  =~ s/[^a-z]//g;
+$aufgabe  =~ s/[^a-zA-Z0-9\-\.\_]//g;
 
 # Sanitize name: keep all needed in URL https://webtigerpython.ethz.ch/#?code=
 # and Base64URL encoding plus letters, numbers, dot, - _ # ? : /
@@ -24,7 +29,9 @@ $link    =~ s/[^a-zA-Z0-9\.\-\#_\?\:\=\/]//g;
 
 # If the form was submitted via POST and we got all information we need - process request
 if ($cgi->request_method eq 'POST' 
-	&& $identifier ne "" && $identifier =~ /^\w\w\w\w$/ 
+	&& $name ne "" && $name =~ /\w/ 
+	&& $identifier ne "" && $identifier =~ /^\w\w\w\w\w$/ 
+	&& $aufgabe ne "" 
 	&& $link ne "" && $link =~ m#^https://webtigerpython.ethz.ch/.+code.+#
 ) {
     # statistics
@@ -36,12 +43,18 @@ if ($cgi->request_method eq 'POST'
 	$identifier =~ /([a-z]+)/;
 	$identifier = $1;
 
-    # Write to file
-	my $fname = $identifier . '_' . $utc_timestamp . '.txt';
+	$name =~ /([a-zA-Z0-9\-]+)/;
+	$name = $1;
+
+	$aufgabe =~ /([a-zA-Z0-9\-\.\_]+)/;
+	$aufgabe = $1;
+
+	# Write to file
+	my $fname = $identifier . '_' . $utc_timestamp . '_' . $name . '_' . $aufgabe . '.txt';
 	my $outfile = $basedir . $fname;
 
 	# content
-	my $output = "'$IP','$UA','$identifier','$link'\n";
+	my $output = "'$IP','$UA','$identifier','$name','$aufgabe','$link'\n";
 
 	# never overwrite files
 	die "file $outfile exists - please try again" if -e $outfile;
@@ -65,9 +78,10 @@ print <<'HTML';
     <p>Your WebTigerPython Link has been saved.<p>
 HTML
 
-print('<p><small>Time: ' . localtime($utc_timestamp) . '</small></p><p><small>Identifier: ' 
-                   . $identifier . '</small></p><p><small>Link: ' 
-				   . $link .'</small></p>');
+print('<p>Time: ' . localtime($utc_timestamp) . '</p>' .
+	  '<p>Name: ' . $name . '</p>' . 
+	  '<p>Aufgabe: ' . $aufgabe . '</p>' . 
+	  '<p><small>Link: ' . $link .'</small></p>');
 
 print <<'HTML';
     <p><a href="submission.cgi">Submit another code link</a></p>
@@ -87,7 +101,7 @@ elsif ($cgi->request_method eq 'POST') {
 <body>
     <h1 style="background-color:Tomato;">Submission FAILED</h1>
     <p>Your WebTigerPython Link has NOT been saved.</p>
-    <p>Did you use a WRONG format for <b>Identifier</b> or <b>Link</b>?</p>
+    <p>Did you use a WRONG format for  <b>Name</b> or <b>Aufgabe</b> or <b>Identifier</b> or <b>Link</b>?</p>
 HTML
 print("<p>Identifier: $identifier</p>");
 print("<p>Link: $link</p>");
@@ -139,8 +153,14 @@ else {
 <h1>Submit a WebTigerPython Code Link</h1>
 
 <form method="post" action="submit.cgi">
-    <label title="xxxx"> 
+    <label title="Dein Name"> 
+	  Name <input type="text" name="Name" required>
+	</label>
+    <label title="5x Kleinbuchstabe - insg. also 11'881'376 Möglichkeiten"> 
 	  Identifier <input type="text" name="Identifier" required>
+	</label>
+    <label title="bspw. 1a oder 3b"> 
+	  Aufgabe <input type="text" name="Aufgabe" required>
 	</label>
     <label title="https://webtigerpython.ethz.ch/#?code=...">
         WebTigerPython Code Link
