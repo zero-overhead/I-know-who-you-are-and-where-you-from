@@ -2,7 +2,7 @@
 use strict;
 use warnings;
 use CGI qw(:standard);
-use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
+#use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
 
 #where to store the output files
 my $basedir = '../../submissions/';
@@ -30,7 +30,7 @@ $link    =~ s/[^a-zA-Z0-9\.\-\#_\?\:\=\/]//g;
 # If the form was submitted via POST and we got all information we need - process request
 if ($cgi->request_method eq 'POST' 
 	&& $name ne "" && $name =~ /\w/ 
-	&& $identifier ne "" && $identifier =~ /^\w\w\w\w\w$/ 
+	&& $identifier ne "" && $identifier =~ /^\w\w\w\w\w\w$/ 
 	&& $aufgabe ne "" 
 	&& $link ne "" && $link =~ m#^https://webtigerpython.ethz.ch/.+code.+#
 ) {
@@ -153,14 +153,14 @@ else {
 <h1>Submit a WebTigerPython Code Link</h1>
 
 <form method="post" action="submit.cgi">
-    <label title="Dein Name"> 
-	  Name <input type="text" name="Name" required>
+    <label title="Dein Name - bspw. 'Susi S.'"> 
+	  Name <input type="text" name="Name" minlength="2" maxlength="25" required>
 	</label>
-    <label title="5x Kleinbuchstabe - insg. also 11'881'376 Möglichkeiten"> 
-	  Identifier <input type="text" name="Identifier" required>
+    <label title="Dein Passwort aus 6 Kleinbuchstaben - bspw. 'agewha' oder 'xsdfed'"> 
+	  Password <input type="text" name="Identifier" minlength="6" maxlength="6" required>
 	</label>
-    <label title="bspw. 1a oder 3b"> 
-	  Aufgabe <input type="text" name="Aufgabe" required>
+    <label title="Die Aufgabennummer - bspw. '1a' oder '3b'"> 
+	  Aufgabe <input type="text" name="Aufgabe" minlength="1" maxlength="4" required>
 	</label>
     <label title="https://webtigerpython.ethz.ch/#?code=...">
         WebTigerPython Code Link
