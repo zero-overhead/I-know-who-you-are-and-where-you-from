@@ -5,7 +5,7 @@ use CGI qw(:standard);
 #use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
 
 #where to store the output files
-my $basedir = '../../submissions/';
+my $basedir = '../../submissions/exam/';
 
 # Create CGI object
 my $cgi = CGI->new;
@@ -71,7 +71,7 @@ print <<'HTML';
 <head>
     <meta charset="UTF-8">
     <title>Submitted</title>
-	<meta http-equiv="refresh" content="2; url=submit.cgi">
+	<meta http-equiv="refresh" content="2; url=submit_wtp_exam_net.cgi">
 </head>
 <body>
     <h1 style="background-color:MediumSeaGreen;">Submission successful</h1>
@@ -84,7 +84,7 @@ print('<p>Time: ' . localtime($utc_timestamp) . '</p>' .
 	  '<p><small>Link: ' . $link .'</small></p>');
 
 print <<'HTML';
-    <p><a href="submission.cgi">Submit another code link</a></p>
+    <p><a href="submit_wtp_exam_net.cgi">Submit another code link</a></p>
 </body>
 </html>
 HTML
@@ -96,7 +96,7 @@ elsif ($cgi->request_method eq 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>NOT Submitted</title>
-	<meta http-equiv="refresh" content="5; url=submit.cgi">
+	<meta http-equiv="refresh" content="5; url=submit_wtp_exam_net.cgi">
 </head>
 <body>
     <h1 style="background-color:Tomato;">Submission FAILED</h1>
@@ -106,7 +106,7 @@ HTML
 print("<p>Identifier: $identifier</p>");
 print("<p>Link: $link</p>");
 print <<'HTML';
-    <p><a href="submit.cgi">Submit another code link</a></p>
+    <p><a href="submit_wtp_exam_net.cgi">Submit another code link</a></p>
 </body>
 </html>
 HTML
@@ -118,7 +118,7 @@ else {
 <html lang="de">
   <head>
     <meta charset="UTF-8">
-    <title>Submission Form</title>
+    <title>WebTigerPython Code Link Submission</title>
   <style>
         body {
             font-family: sans-serif;
@@ -152,7 +152,7 @@ else {
 
 <h1>Submit a WebTigerPython Code Link</h1>
 
-<form method="post" action="submit.cgi">
+<form method="post" action="submit_wtp_exam_net.cgi">
     <label title="Dein Name - bspw. 'Susi S.'"> 
 	  Name <input type="text" name="Name" minlength="2" maxlength="25" required>
 	</label>
