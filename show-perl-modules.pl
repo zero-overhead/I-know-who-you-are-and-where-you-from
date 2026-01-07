@@ -18,7 +18,7 @@ print <<'HTML';
 <head>
     <meta charset="UTF-8">
     <title>show</title>
-	<link rel="stylesheet" href="https://rocco.melzian.ch/css/style.css">
+	<link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
     <h1 style="background-color:MediumSeaGreen;">Available Modules</h1>
