@@ -6,7 +6,7 @@ use CGI::Cookie;
 use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
 
 #where to store the output files
-my $basedir = '../../submissions/';
+my $basedir = '../../submissions/exercise/';
 
 # Create CGI object
 my $cgi = CGI->new;
@@ -63,7 +63,7 @@ if ($cgi->request_method eq 'POST'
 	my $outfile = $basedir . $fname;
 
 	# content
-	my $output = "'$IP','$UA','$klasse','$aufgabe','$name','$link'\n";
+	my $output = "'$IP','$UA','$klasse','$name','$aufgabe','$link'\n";
 
 	# never overwrite files
 	die "file $outfile exists - please try again" if -e $outfile;
@@ -77,13 +77,13 @@ if ($cgi->request_method eq 'POST'
     my $name_cookie = $cgi->cookie(
         -name  => 'Name',
         -value => $name,
-        -expires => '+3h'
+        -expires => '+1y'
     );
 
     my $klasse_cookie = $cgi->cookie(
         -name  => 'Klasse',
         -value => $klasse,
-        -expires => '+3h'
+        -expires => '+1y'
     );
 
     my $uuid_cookie = $cgi->cookie(
@@ -104,7 +104,7 @@ print <<'HTML';
 <head>
     <meta charset="UTF-8">
     <title>Submitted</title>
-	<meta http-equiv="refresh" content="2; url=submission.cgi">
+	<meta http-equiv="refresh" content="2; url=submit_wtp_exercise.cgi">
 </head>
 <body>
     <h1 style="background-color:MediumSeaGreen;">Submission successful</h1>
@@ -116,7 +116,7 @@ print('<p><small>' . localtime($utc_timestamp) . '</small></p><p><small>'
 				   . $link .'</small></p>');
 
 print <<'HTML';
-    <p><a href="submission.cgi">Submit another code link</a></p>
+    <p><a href="submit_wtp_exercise.cgi">Submit another code link</a></p>
 </body>
 </html>
 HTML
@@ -129,7 +129,7 @@ elsif ($cgi->request_method eq 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>NOT Submitted</title>
-	<meta http-equiv="refresh" content="5; url=submission.cgi">
+	<meta http-equiv="refresh" content="5; url=submit_wtp_exercise.cgi">
 </head>
 <body>
     <h1 style="background-color:Tomato;">Submission FAILED</h1>
@@ -142,7 +142,7 @@ print("<p>Aufgabe: $aufgabe</p>");
 print("<p>Link: $link</p>");
 print("<p>UUID: $uuid</p>");
 print <<'HTML';
-    <p><a href="submission.cgi">Submit another code link</a></p>
+    <p><a href="submit_wtp_exercise.cgi">Submit another code link</a></p>
 </body>
 </html>
 HTML
@@ -155,7 +155,7 @@ else {
 <html lang="de">
   <head>
     <meta charset="UTF-8">
-    <title>Submission Form</title>
+    <title>WebTigerPython Code Link Submission</title>
   <style>
         body {
             font-family: sans-serif;
@@ -194,18 +194,16 @@ else {
 
 <h1>Submit a WebTigerPython Code Link</h1>
 
-<form method="post" action="submission.cgi">
-    <label title="YOUR.NAME@domain.tld"> 
+<form method="post" action="submit_wtp_exercise.cgi">
 HTML
 
 if ($cookie_name ne '') {
   print($cookie_name)
 } else {
-  print('Name <input type="text" name="Name" required>')
+  print('Name <input type="text" name="Name" minlength="1" maxlength="25" required>')
 }
 
 print <<'HTML';
-    </label>
     <label>
 HTML
 
@@ -255,7 +253,7 @@ print <<'HTML';
 
     <label title="bspw. 1a oder 5g">
         Aufgabe
-        <input type="text" name="Aufgabe" required>
+        <input type="text" name="Aufgabe" minlength="1" maxlength="6" required>
     </label>
 
     <label title="https://webtigerpython.ethz.ch/#?code=...">
