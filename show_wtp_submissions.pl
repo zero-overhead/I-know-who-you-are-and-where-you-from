@@ -32,8 +32,10 @@ print <<'HTML';
 	<link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <h1 style="background-color:MediumSeaGreen;">Submissions</h1>
+    <h1 style="background-color:MediumSeaGreen;">
 HTML
+print $basedir;
+print "</h1>";
 
 my @files;
 find(
