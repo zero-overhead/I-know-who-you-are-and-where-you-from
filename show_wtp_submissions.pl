@@ -16,7 +16,7 @@ my $folder = $cgi->param('folder');
 $folder =~ /([a-z]+)/;
 $folder = $1;
 	
-unless ($folder eq 'exam' || $folder eq 'grading' || $folder eq 'exercise') {
+unless ($folder eq 'exam' || $folder eq 'trunk' || $folder eq 'exercise') {
   $folder = 'exercise'
 }
 
