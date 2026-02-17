@@ -192,7 +192,7 @@ else {
   </head>
 <body>
 
-<h1>Submit a WebTigerPython Code Link</h1>
+<h1>Submit a <a href="https://webtigerpython.ethz.ch/" target="_blank">WebTigerPython</a> Code Link</h1>
 
 <form method="post" action="submit_wtp_exercise.cgi">
 HTML
