@@ -31,7 +31,7 @@ if ($name =~ m/@/) {
 }
 
 # Sanitize name: keep letters, numbers, some signs
-$name  =~ s/[^a-zA-Z0-9\-\.\_]//g;
+$name  =~ s/[^a-zA-Z0-9\-\.\_äöüéèàÜÖÄç]//g;
 $klasse  =~ s/[^a-zA-Z0-9]//g;
 $aufgabe  =~ s/[^a-zA-Z0-9\-\.\_]//g;
 
@@ -41,7 +41,7 @@ $link    =~ s/[^a-zA-Z0-9\.\-\#_\?\:\=\/]//g;
 
 # If the form was submitted via POST and we got all information we need - process request
 if ($cgi->request_method eq 'POST' 
-	&& $name ne "" && $name =~ /\w+/ 
+	&& $name ne "" && $name =~ /[\wäöüéèàÜÖÄç]+/ 
 	&& $klasse ne "" && $aufgabe =~ /\w|\d/ 
 	&& $aufgabe ne "" && $klasse =~ /^\w\d\w$/ 
 	&& $link ne "" && $link =~ m#^https://webtigerpython.ethz.ch/.+code.+#
