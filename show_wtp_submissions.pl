@@ -7,16 +7,25 @@ use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
 use File::Find;
 #use Data::Dumper;
 
+my $k = 'replace-me';
+
 # Create CGI object
 my $cgi = CGI->new;
 print $cgi->header('text/html; charset=UTF-8');
 
-my $folder = $cgi->param('folder');
+my $key = $cgi->param('key');
 # needed untainting in order to use T switch in shebang
-$folder =~ /([a-z]+)/;
-$folder = $1;
-	
-unless ($folder eq 'exam' || $folder eq 'trunk' || $folder eq 'exercise') {
+$key =~ /([a-z]+)/;
+$key = $1;
+unless ($key eq $k) {
+  die 'access denied'
+}
+
+my $folder = $cgi->param('folder');
+if ($folder =~ /([a-z]+)/) {
+    $folder = $1;
+}
+if ($folder eq '') {
   $folder = 'exercise'
 }
 
