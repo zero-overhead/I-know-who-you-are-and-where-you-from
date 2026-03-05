@@ -63,7 +63,7 @@ my %submissions;
 for my $file (sort @files) {
 	#gokbim_1767622546_Betl_1.txt
 	#0fae5512-41f9-4edf-b68c-71d21cfb04b3_1767790934.txt
-	my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$submission_time,$blksize,$blocks) = stat($file) or die "Cannot stat $file: $!";
+	my ($dev,$ino,$mode,$nlink,$uid,$gid,$rdev,$size,$atime,$mtime,$ctime,$blksize,$blocks) = stat($file) or die "Cannot stat $file: $!";
 
     my $document = do {
 		local $/ = undef;
@@ -79,7 +79,7 @@ for my $file (sort @files) {
 
 	my %submission = (
 		file      => $file,
-		ts        => $submission_time,
+		ts        => $mtime,
 		ip        => $fields[0],
 		useragent => $fields[1],
 		password  => $fields[2],
