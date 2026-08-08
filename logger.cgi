@@ -8,7 +8,12 @@ use JSON;
 use POSIX qw(strftime);
 use File::Path qw(make_path);
 
+# we run e.g. this cron job to keep the folder clean
+#
+# Delete old or big data files & all empty folders
+# STUDENT_DATA_DIR=rocco.melzian.ch/pub/students/data-logger && find $STUDENT_DATA_DIR -type f -mtime +30 -delete && find $STUDENT_DATA_DIR -type f -size +1M -delete && find $STUDENT_DATA_DIR -type d -empty -delete
 my $base_dir = '../pub/students/data-logger';
+my $max_file_size_in_byte = 1024 * 8;
 
 my $time = time;
 #my $local_string = strftime "%Y-%m-%d %H:%M:%S", localtime($time);
@@ -51,13 +56,21 @@ open(my $fh, '>', $file) or do {
     print encode_json({ status => "error", message => "Cannot write file" });
     exit;
 };
-
 print $fh encode_json(\%params);
 close($fh);
+
+# check maximum file size limit
+my $filesize = -s $file;
+if ($filesize > $max_file_size_in_byte) {
+    unlink $file;
+	print encode_json({ status => "error", message => "Too much data: $filesize while allowed max is only $max_file_size_in_byte"});
+    exit;
+}
 
 # Response
 print encode_json({
     status  => "success",
     message => "Data stored",
-    file    => $file
+    "file-path"    => $file,
+	"file-size"    => "$filesize byte" 
 });
