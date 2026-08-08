@@ -11,7 +11,7 @@ use File::Path qw(make_path);
 # we run e.g. this cron job to keep the folder clean
 #
 # Delete old or big data files & all empty folders
-# STUDENT_DATA_DIR=rocco.melzian.ch/pub/students/data-logger && find $STUDENT_DATA_DIR -type f -mtime +30 -delete && find $STUDENT_DATA_DIR -type f -size +1M -delete && find $STUDENT_DATA_DIR -type d -empty -delete
+# STUDENT_DATA_DIR=path/to/pub/students/data-logger && find $STUDENT_DATA_DIR -type f -mtime +30 -delete && find $STUDENT_DATA_DIR -type f -size +1M -delete && find $STUDENT_DATA_DIR -type d -empty -delete
 my $base_dir = '../pub/students/data-logger';
 my $max_file_size_in_byte = 1024 * 8;
 
