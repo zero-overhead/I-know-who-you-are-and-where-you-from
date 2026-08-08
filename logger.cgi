@@ -70,7 +70,7 @@ if ($filesize > $max_file_size_in_byte) {
 # Response
 print encode_json({
     status  => "success",
-    message => "Data stored",
-    "file-path"    => $file,
-	"file-size"    => "$filesize byte" 
+    #message	=> "Data stored",
+    file	=> $file,
+	size	=> $filesize 
 });
