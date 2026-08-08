@@ -134,7 +134,7 @@ elsif ($cgi->request_method eq 'POST') {
 <body>
     <h1 style="background-color:Tomato;">Submission FAILED</h1>
     <p>Your WebTigerPython Link has NOT been saved.</p>
-    <p>Did you use a WRONG format for <b>Name</b> or <b>Klasse</b> or <b>Aufgabe</b> or <b>Link</b>?</p>
+    <p>Did you use a WRONG format for <b>Name</b> or <b>Klasse</b> or <b>Aufgabe/Abgabe/Task</b> or <b>Link</b>?</p>
 HTML
 print("<p>Name: $name</p>");
 print("<p>Klasse: $klasse</p>");
@@ -252,7 +252,7 @@ print <<'HTML';
     </label>
 
     <label title="bspw. 1a oder 5g">
-        Aufgabe
+        Aufgabe/Abgabe/Task
         <input type="text" name="Aufgabe" minlength="1" maxlength="6" required>
     </label>
 
