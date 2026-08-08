@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/perl -wT
 
 use strict;
 use warnings;
@@ -17,16 +17,18 @@ my $utc_string = strftime "%Y-%m-%d %H:%M:%S", gmtime($time);
 # Create CGI object
 my $cgi = CGI->new;
 
-# Set response header
-print $cgi->header('application/json');
-
 # Get all parameters
 my %params = $cgi->Vars;
 
 # Check for api_key
 my $api_key = $params{'api_key'};
-# Sanitize (basic)
-$api_key =~ s/[^a-zA-Z0-9_\-]//g;
+
+# Sanitize (basic) to pass Perl T argument
+$api_key =~ /([a-zA-Z0-9_-]+)/;
+$api_key = $1;
+
+# Set response header
+print $cgi->header('application/json');
 
 if (!$api_key) {
     print encode_json({ status => "error", message => "Missing or wrong api_key" });
